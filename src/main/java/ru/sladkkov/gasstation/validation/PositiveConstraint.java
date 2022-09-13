@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PositiveConstraintValidator.class)
-public @interface PositiveValidation {
-    String message() default "{value.negative}";
+@Constraint(validatedBy = {PositiveIntegerConstraintValidator.class, PositiveBigDecimalConstraintValidator.class})
+public @interface PositiveConstraint {
+    String message() default "Value must be positive";
 
     Class<?>[] groups() default {};
 
