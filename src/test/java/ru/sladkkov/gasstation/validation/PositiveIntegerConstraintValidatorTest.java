@@ -2,8 +2,8 @@ package ru.sladkkov.gasstation.validation;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.sladkkov.gasstation.topology.elementmap.Car;
-import ru.sladkkov.gasstation.topology.elementmap.Fuel;
+import ru.sladkkov.gasstation.topology.freemapelement.Car;
+import ru.sladkkov.gasstation.topology.freemapelement.Fuel;
 import ru.sladkkov.gasstation.model.User;
 
 import javax.validation.ConstraintViolation;

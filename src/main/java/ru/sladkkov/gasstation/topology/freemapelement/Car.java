@@ -1,8 +1,8 @@
-package ru.sladkkov.gasstation.topology.elementmap;
+package ru.sladkkov.gasstation.topology.freemapelement;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.sladkkov.gasstation.topology.elementmap.impl.Payable;
+import ru.sladkkov.gasstation.topology.squareelementmap.AbleToDown;
 import ru.sladkkov.gasstation.validation.PositiveConstraint;
 
 import javax.validation.constraints.*;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class Car implements Payable {
+public class Car implements AbleToDown {
 
     @NotEmpty(message = "The brand cannot be empty")
     @Pattern(regexp = "[A-z]+", message = "Car brand must be only of letters")
@@ -34,6 +34,6 @@ public class Car implements Payable {
 
     @Override
     public void changeResource(BigDecimal countResource) {
-
+        this.currentTankCapacity = currentTankCapacity.add(countResource);
     }
 }

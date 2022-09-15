@@ -3,7 +3,7 @@ package ru.sladkkov.gasstation.topology.topologymap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.sladkkov.gasstation.topology.elementmap.TopologyElement;
+import ru.sladkkov.gasstation.topology.squareelementmap.impl.TopologyElement;
 
 @Data
 @AllArgsConstructor
