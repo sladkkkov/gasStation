@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .antMatchers("api/v1/register").permitAll()
                 .antMatchers("api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers("api/v1/user/**").hasRole("USER")
+                .antMatchers("api/v1/topologyCreate").permitAll()
                 .and()
                 .apply(configurerFilter);
 

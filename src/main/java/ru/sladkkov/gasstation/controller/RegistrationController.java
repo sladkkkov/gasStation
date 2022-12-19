@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.sladkkov.gasstation.config.security.service.RegistrationService;
+import ru.sladkkov.gasstation.service.RegistrationService;
 import ru.sladkkov.gasstation.dto.request.RegisterRequest;
 import javax.management.relation.RoleNotFoundException;
 

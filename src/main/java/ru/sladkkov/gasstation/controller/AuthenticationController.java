@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.sladkkov.gasstation.config.security.service.AuthenticationService;
+import ru.sladkkov.gasstation.service.AuthenticationService;
 import ru.sladkkov.gasstation.dto.request.LoginRequest;
 import ru.sladkkov.gasstation.dto.response.JwtResponse;
 
