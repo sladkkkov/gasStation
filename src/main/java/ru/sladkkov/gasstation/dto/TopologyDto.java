@@ -8,5 +8,5 @@ public class TopologyDto {
     int[][] topology;
     int topologyLength;
     int topologyWidth;
-    int topologyService;
+    int topologyServiceLength;
 }

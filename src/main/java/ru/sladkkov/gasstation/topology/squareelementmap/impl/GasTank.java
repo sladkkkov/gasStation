@@ -12,15 +12,12 @@ public class GasTank extends TopologyElement implements AbleToDown {
 
     public static final BigDecimal CAPACITY = BigDecimal.valueOf(10_000);
 
-    private final int numberGasTank;
-
     private BigDecimal amountOfRemainingFuel;
 
-    public GasTank(int numberGasTank) {
-        super(false);
-        this.numberGasTank = numberGasTank;
-        this.amountOfRemainingFuel = CAPACITY;
+    public GasTank(boolean isValidToRide) {
+        super(isValidToRide);
     }
+
 
     @Override
     public void changeResource(BigDecimal countResource) {

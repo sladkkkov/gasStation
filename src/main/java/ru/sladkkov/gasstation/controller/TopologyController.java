@@ -25,7 +25,7 @@ public class TopologyController {
         boolean cashBox = false;
 
         int[][] topology = topologyDTO.getTopology();
-        WaveAlg wave = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyService());
+        WaveAlg wave = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
         for (int i = 0; i < topology.length; i++) {
             int[] ints = topology[i];
             for (int j = 0; j < ints.length; j++) {
@@ -59,6 +59,4 @@ public class TopologyController {
 
         return ResponseEntity.ok("Работаем мужики");
     }
-
-
 }
