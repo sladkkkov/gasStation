@@ -1,4 +1,4 @@
-package ru.sladkkov.gasstation.topology.freemapelement;
+package ru.sladkkov.gasstation.model.userdetails.topology.freemapelement;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

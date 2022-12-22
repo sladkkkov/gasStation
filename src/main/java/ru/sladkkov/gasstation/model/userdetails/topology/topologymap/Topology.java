@@ -1,9 +1,9 @@
-package ru.sladkkov.gasstation.topology.topologymap;
+package ru.sladkkov.gasstation.model.userdetails.topology.topologymap;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.sladkkov.gasstation.topology.squareelementmap.impl.TopologyElement;
+import ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.impl.TopologyElement;
 
 @Data
 @AllArgsConstructor

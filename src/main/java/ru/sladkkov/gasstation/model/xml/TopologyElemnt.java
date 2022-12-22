@@ -1,25 +1,19 @@
 package ru.sladkkov.gasstation.model.xml;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
-@Builder
-public class massiveTopologyObject {
+@Setter
+@Entity
+public class TopologyElemnt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    private int topologyLength;
-    private int topologyWidth;
-
 
 }

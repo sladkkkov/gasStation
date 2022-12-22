@@ -1,9 +1,7 @@
-package ru.sladkkov.gasstation.topology.squareelementmap.impl;
+package ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

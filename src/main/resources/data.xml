@@ -1,0 +1,155 @@
+<div xmlns="http://www.w3.org/1999/xhtml" id="root">
+    <div class="wrapper">
+        <header class="header">Настройка топологии</header>
+        <main class="main">
+            <div class="topology-wrapper">
+                <div class="topology-menu">
+                    <div class="topology-elem">
+                        <img src="/static/media/kassa.e89e97b299f5e276ae46f8d674b3454e.svg" alt="" id="kassa"
+                             class="topology-elem__img"/>
+                        <div class="topology-elem__title">1 касса</div>
+                    </div>
+                    <div class="topology-elem">
+                        <img src="/static/media/trk.9dc165abc59b8f61133bf4e20ef58a21.svg" alt="" id="trk"
+                             class="topology-elem__img"/>
+                        <div class="topology-elem__title">4 ТРК</div>
+                    </div>
+                    <div class="topology-elem">
+                        <img src="/static/media/bak.495c18a4d4d8017e6f663f1335eb18d3.svg" alt="" id="bak"
+                             class="topology-elem__img"/>
+                        <div class="topology-elem__title">7 топливный бак</div>
+                    </div>
+                    <div class="topology-elem">
+                        <img src="/static/media/in.82adb713cf14e92a9ded04e41d42c563.svg" alt="" id="inLogo"
+                             class="topology-elem__img"/>
+                        <div class="topology-elem__title">1 въезд</div>
+                    </div>
+                    <div class="topology-elem">
+                        <img src="/static/media/out.fd669df7655841f3ae803e2cae512486.svg" alt="" id="outLogo"
+                             class="topology-elem"/>
+                        <div class="topology-elem__title">1 выезд</div>
+                    </div>
+                </div>
+                <div class="board" style="grid-template-columns: repeat(10, 1fr);">
+                    <div id="0" class="kassa" style="border: 1px solid black; background: url(&quot;http://localhost:3000/static/media/kassa.e89e97b299f5e276ae46f8d674b3454e.svg&quot;) center center;"></div>
+                    <div id="1" class="govno" style="border: 1px solid black;"></div>
+                    <div id="2" class="govno" style="border: 1px solid black;"></div>
+                    <div id="3" class="govno" style="border: 1px solid black;"></div>
+                    <div id="4" class="govno" style="border: 1px solid black;"></div>
+                    <div id="5" class="govno" style="border: 1px solid black;"></div>
+                    <div id="6" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="7" class="govno" style="border: 1px solid black;"></div>
+                    <div id="8" class="govno" style="border: 1px solid black;"></div>
+                    <div id="9" class="govno" style="border: 1px solid black;"></div>
+                    <div id="10" class="govno" style="border: 1px solid black;"></div>
+                    <div id="11" class="govno" style="border: 1px solid black;"></div>
+                    <div id="12" class="govno" style="border: 1px solid black;"></div>
+                    <div id="13" class="govno" style="border: 1px solid black;"></div>
+                    <div id="14" class="govno" style="border: 1px solid black;"></div>
+                    <div id="15" class="govno" style="border: 1px solid black;"></div>
+                    <div id="16" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="17" class="govno" style="border: 1px solid black;"></div>
+                    <div id="18" class="govno" style="border: 1px solid black;"></div>
+                    <div id="19" class="govno" style="border: 1px solid black;"></div>
+                    <div id="20" class="govno" style="border: 1px solid black;"></div>
+                    <div id="21" class="govno" style="border: 1px solid black;"></div>
+                    <div id="22" class="govno" style="border: 1px solid black;"></div>
+                    <div id="23" class="govno" style="border: 1px solid black;"></div>
+                    <div id="24" class="govno" style="border: 1px solid black;"></div>
+                    <div id="25" class="govno" style="border: 1px solid black;"></div>
+                    <div id="26" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="27" class="govno" style="border: 1px solid black;"></div>
+                    <div id="28" class="govno" style="border: 1px solid black;"></div>
+                    <div id="29" class="govno" style="border: 1px solid black;"></div>
+                    <div id="30" class="govno" style="border: 1px solid black;"></div>
+                    <div id="31" class="inLogo" style="border: 1px solid black; background: url(&quot;http://localhost:3000/static/media/in.82adb713cf14e92a9ded04e41d42c563.svg&quot;) center center;"></div>
+                    <div id="32" class="govno" style="border: 1px solid black;"></div>
+                    <div id="33" class="govno" style="border: 1px solid black;"></div>
+                    <div id="34" class="govno" style="border: 1px solid black;"></div>
+                    <div id="35" class="govno" style="border:1px solid black;"></div>
+                    <div id="36" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="37" class="govno" style="border: 1px solid black;"></div>
+                    <div id="38" class="govno" style="border: 1px solid black;"></div>
+                    <div id="39" class="govno" style="border: 1px solid black;"></div>
+                    <div id="40" class="govno" style="border: 1px solid black;"></div>
+                    <div id="41" class="govno" style="border: 1px solid black;"></div>
+                    <div id="42" class="govno" style="border: 1px solid black;"></div>
+                    <div id="43" class="govno" style="border: 1px solid black;"></div>
+                    <div id="44" class="govno" style="border: 1px solid black;"></div>
+                    <div id="45" class="govno" style="border: 1px solid black;"></div>
+                    <div id="46" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="47" class="govno" style="border: 1px solid black;"></div>
+                    <div id="48" class="govno" style="border: 1px solid black;"></div>
+                    <div id="49" class="govno" style="border: 1px solid black;"></div>
+                    <div id="50" class="govno" style="border: 1px solid black;"></div>
+                    <div id="51" class="govno" style="border: 1px solid black;"></div>
+                    <div id="52" class="govno" style="border: 1px solid black;"></div>
+                    <div id="53" class="govno" style="border: 1px solid black;"></div>
+                    <div id="54" class="govno" style="border: 1px solid black;"></div>
+                    <div id="55" class="govno" style="border: 1px solid black;"></div>
+                    <div id="56" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="57" class="govno" style="border: 1px solid black;"></div>
+                    <div id="58" class="govno" style="border: 1px solid black;"></div>
+                    <div id="59" class="govno" style="border: 1px solid black;"></div>
+                    <div id="60" class="govno" style="border: 1px solid black;"></div>
+                    <div id="61" class="govno" style="border: 1px solid black;"></div>
+                    <div id="62" class="govno" style="border: 1px solid black;"></div>
+                    <div id="63" class="govno" style="border: 1px solid black;"></div>
+                    <div id="64" class="govno" style="border: 1px solid black;"></div>
+                    <div id="65" class="govno" style="border: 1px solid black;"></div>
+                    <div id="66" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="67" class="govno" style="border: 1px solid black;"></div>
+                    <div id="68" class="govno" style="border: 1px solid black;"></div>
+                    <div id="69" class="govno" style="border: 1px solid black;"></div>
+                    <div id="70" class="govno" style="border: 1px solid black;"></div>
+                    <div id="71" class="govno" style="border: 1px solid black;"></div>
+                    <div id="72" class="govno" style="border: 1px solid black;"></div>
+                    <div id="73" class="govno" style="border: 1px solid black;"></div>
+                    <div id="74" class="govno" style="border: 1px solid black;"></div>
+                    <div id="75" class="govno" style="border: 1px solid black;"></div>
+                    <div id="76" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="77" class="govno" style="border: 1px solid black;"></div>
+                    <div id="78" class="govno" style="border: 1px solid black;"></div>
+                    <div id="79" class="govno" style="border: 1px solid black;"></div>
+                    <div id="80" class="govno" style="border: 1px solid black;"></div>
+                    <div id="81" class="govno" style="border: 1px solid black;"></div>
+                    <div id="82" class="govno" style="border: 1px solid black;"></div>
+                    <div id="83" class="govno" style="border: 1px solid black;"></div>
+                    <div id="84" class="govno" style="border: 1px solid black;"></div>
+                    <div id="85" class="govno" style="border: 1px solid black;"></div>
+                    <div id="86" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="87" class="govno" style="border: 1px solid black;"></div>
+                    <div id="88" class="govno" style="border: 1px solid black;"></div>
+                    <div id="89" class="govno" style="border: 1px solid black;"></div>
+                    <div id="90" class="govno" style="border: 1px solid black;"></div>
+                    <div id="91" class="govno" style="border: 1px solid black;"></div>
+                    <div id="92" class="govno" style="border: 1px solid black;"></div>
+                    <div id="93" class="govno" style="border: 1px solid black;"></div>
+                    <div id="94" class="govno" style="border: 1px solid black;"></div>
+                    <div id="95" class="govno" style="border: 1px solid black;"></div>
+                    <div id="96" class="govno" style="border-width: 1px 4px 1px 1px; border-style: solid; border-color: black; border-image: initial; position: relative;"></div>
+                    <div id="97" class="govno" style="border: 1px solid black;"></div>
+                    <div id="98" class="govno" style="border: 1px solid black;"></div>
+                    <div id="99" class="govno" style="border: 1px solid black;"></div>
+                </div>
+                <div class="topology-buttons">
+                    <div class="topology-button">сохранить</div>
+                </div>
+            </div>
+            <div class="topology-inputs-wrapper">
+                <div class="input-wrapper">
+                    <span class="input-title">ширина АЗС:</span>
+                    <input type="number" class="input" value="10"/>
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-title">длина главного блока:</span>
+                    <input type="number" class="input" value="7"/>
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-title">длина служебного блока:</span>
+                    <input type="number" class="input" value="3"/>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

@@ -1,7 +1,6 @@
-package ru.sladkkov.gasstation.topology.squareelementmap.impl;
+package ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.impl;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class OutTopology extends TopologyElement {

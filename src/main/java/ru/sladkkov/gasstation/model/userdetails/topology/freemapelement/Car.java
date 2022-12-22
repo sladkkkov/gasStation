@@ -1,8 +1,8 @@
-package ru.sladkkov.gasstation.topology.freemapelement;
+package ru.sladkkov.gasstation.model.userdetails.topology.freemapelement;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.sladkkov.gasstation.topology.squareelementmap.AbleToDown;
+import ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.AbleToDown;
 import ru.sladkkov.gasstation.validation.PositiveConstraint;
 
 import javax.validation.constraints.*;

@@ -1,8 +1,8 @@
-package ru.sladkkov.gasstation.topology.squareelementmap.impl;
+package ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.impl;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.sladkkov.gasstation.topology.squareelementmap.AbleToDown;
+import ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.AbleToDown;
 
 import java.math.BigDecimal;
 

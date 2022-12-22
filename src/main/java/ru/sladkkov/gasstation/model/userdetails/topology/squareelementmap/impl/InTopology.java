@@ -1,4 +1,4 @@
-package ru.sladkkov.gasstation.topology.squareelementmap.impl;
+package ru.sladkkov.gasstation.model.userdetails.topology.squareelementmap.impl;
 
 import lombok.Data;
 @Data
