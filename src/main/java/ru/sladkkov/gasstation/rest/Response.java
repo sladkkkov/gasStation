@@ -1,4 +1,4 @@
-package ru.sladkkov.gasstation.Rest;
+package ru.sladkkov.gasstation.rest;
 
 import java.io.Serializable;
 

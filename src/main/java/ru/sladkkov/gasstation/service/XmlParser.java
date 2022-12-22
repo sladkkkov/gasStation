@@ -1,17 +1,21 @@
 package ru.sladkkov.gasstation.service;
 
+import org.springframework.stereotype.Service;
 import ru.sladkkov.gasstation.topology.squareelementmap.impl.*;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class XmlParser {
 
-    final String regex = "<div id=\"(\\d+)\" class=\"(\\w+)\" style=\"[^\"]*\"></div>";
-    final Pattern pattern = Pattern.compile(regex);
+    private static final String REGEX = "<div id=\"(\\d+)\" class=\"(\\w+)\" style=\"[^\"]*\"></div>";
+    final Pattern pattern = Pattern.compile(REGEX);
 
-    public HashMap<Integer, TopologyElement> parseXmlToHashMapOfIdAndTypeObject(String xmlDocument, int length, int width) {
+    public Map<Integer, TopologyElement> parseXmlToHashMapOfIdAndTypeObject(String xmlDocument) throws IOException {
         Matcher matcher = pattern.matcher(xmlDocument);
         HashMap<Integer, TopologyElement> hashMap = new HashMap<>();
 
@@ -24,13 +28,13 @@ public class XmlParser {
                         case "inLogo" -> new InTopology(true);
                         case "outLogo" -> new OutTopology(true);
                         case "govno" -> new FreeElement(true);
-                        default->null;
+                        default -> throw new IOException();
                     });
         }
         return hashMap;
     }
 
-    public TopologyElement[][] parseHashMapToMassiveObject(HashMap<Integer, TopologyElement> hashMapWithObject, int length, int width) {
+    public TopologyElement[][] parseHashMapToMassiveObject(Map<Integer, TopologyElement> hashMapWithObject, int length, int width) {
         TopologyElement[][] topologyElements = new TopologyElement[length][width];
 
         for (int i = 0; i < length; i++) {
