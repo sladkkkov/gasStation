@@ -2,8 +2,6 @@ package ru.sladkkov.gasstation.controller;
 
 import org.assertj.core.util.Preconditions;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sladkkov.gasstation.dto.TopologyDto;
@@ -11,6 +9,9 @@ import ru.sladkkov.gasstation.dto.TopologyDto;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.lang.annotation.ElementType.FIELD;
 
 
 @RestController
@@ -18,7 +19,8 @@ import java.util.List;
 public class TopologyController {
     // @PostMapping()
     @PostConstruct
-    public ResponseEntity<String> topologyCreateController() throws CloneNotSupportedException {//@RequestBody TopologyDto topologyDTO) {
+
+    public ResponseEntity<List<String>> topologyCreateController() {//@RequestBody TopologyDto topologyDTO) {
 
         TopologyDto topologyDTO = new TopologyDto();
         topologyDTO.setTopology(new int[10][10]);
@@ -37,13 +39,13 @@ public class TopologyController {
         int endY = 0;
 
 
-        int[][] topology = topologyDTO.getTopology(); //РѕСЃРЅРѕРІРЅР°СЏ РєР°СЂС‚Р°
-        topology[0][6] = 1;
-        topology[0][1] = 2;
-        topology[4][3] = 3;
-        topology[7][4] = 3;
+        int[][] topology = topologyDTO.getTopology();//Optional.ofNullable(topologyDTO.getTopology()); //основная карта
+        topology[0][1] = 1;
+        topology[0][7] = 2;
+        topology[7][3] = 3;
+        topology[7][7] = 3;
         topology[3][5] = 3;
-        topology[5][7] = 4;
+        topology[4][7] = 4;
 
         WaveAlg waveOrig = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
         for (int i = 0; i < topology.length; i++) {
@@ -62,38 +64,116 @@ public class TopologyController {
                 }
                 if (anInt == 3) {
                     trk++;
+                    Preconditions.checkState(!(i == 0 || j == 0 || i == topology.length - 1 || j == ints.length - 1), "ТРК должны быть расположены не на границах топологии.");
                     trkArrayX.add(i);
-                    trkArrayY.add(i);
+                    trkArrayY.add(j);
                 }
                 if (anInt == 4)
                     cashBox++;
-                if (anInt != 0 && anInt != 1 && anInt != 2) {
-                    waveOrig.block(i, j);
+                if (anInt != 0) {
+
+                    if (j == 0 && i == 0) {
+                        Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
+                                        (topology[i + 1][j] == 0) &&
+                                        (topology[i][j + 1] == 0),
+                                "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                    } else {
+                        if (j == 0) {
+                            Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
+                                            (topology[i + 1][j] == 0) &&
+                                            (topology[i][j + 1] == 0) &&
+                                            (topology[i - 1][j + 1] == 0) &&
+                                            (topology[i - 1][j] == 0),
+                                    "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+
+                        } else {
+                            if (i == 0) {
+
+                                Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
+                                        (topology[i + 1][j] == 0) &&
+                                        (topology[i + 1][j - 1] == 0) &&
+                                        (topology[i][j + 1] == 0) &&
+                                        (topology[i][j - 1] == 0), "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                            } else if (i == topology.length - 1 && j == topology[i].length - 1) {
+                                Preconditions.checkState(
+                                        (topology[i][j - 1] == 0) &&
+                                                (topology[i - 1][j] == 0) &&
+                                                (topology[i - 1][j - 1] == 0),
+                                        "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+
+                            } else {
+                                if (i == topology.length - 1) {
+                                    Preconditions.checkState(
+                                            (topology[i][j + 1] == 0) &&
+                                                    (topology[i][j - 1] == 0) &&
+                                                    (topology[i - 1][j + 1] == 0) &&
+                                                    (topology[i - 1][j] == 0) &&
+                                                    (topology[i - 1][j - 1] == 0),
+                                            "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                } else {
+                                    if (j == topology[i].length - 1) {
+                                        Preconditions.checkState(
+                                                (topology[i + 1][j] == 0) &&
+                                                        (topology[i + 1][j - 1] == 0) &&
+                                                        (topology[i][j - 1] == 0) &&
+                                                        (topology[i - 1][j] == 0) &&
+                                                        (topology[i - 1][j - 1] == 0),
+                                                "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                    } else {
+                                        Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
+                                                        (topology[i + 1][j] == 0) &&
+                                                        (topology[i + 1][j - 1] == 0) &&
+                                                        (topology[i][j + 1] == 0) &&
+                                                        (topology[i][j - 1] == 0) &&
+                                                        (topology[i - 1][j + 1] == 0) &&
+                                                        (topology[i - 1][j] == 0) &&
+                                                        (topology[i - 1][j - 1] == 0),
+                                                "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    System.out.println(i + "  " + j);
+
                 }
             }
+
+
         }
-
-        Preconditions.checkState(enter == 1, "РќРµС‚ РІСЉРµР·РґР° РґР»СЏ РјР°С€РёРЅ.");
-        Preconditions.checkState(exit == 1, "РќРµС‚ РІС‹РµР·РґР° РґР»СЏ РјР°С€РёРЅ.");
-        Preconditions.checkState((startX == 0), "Р’СЉРµР·Рґ РЅР°С…РѕРґРёС‚СЃСЏ РЅРµ РєСЂР°Р№РЅРёС… РєР»РµС‚РєР°С…");//|| startX == (topology[0].length-1)
-        Preconditions.checkState((endX == 0), "Р’С‹РµР·Рґ РЅР°С…РѕРґРёС‚СЃСЏ РЅРµ РєСЂР°Р№РЅРёС… РєР»РµС‚РєР°С…");//|| endX == (topology[0].length-1)
-        Preconditions.checkState(trk < 7 && trk > 0, "РќРµС‚ РўР Рљ РґР»СЏ РјР°С€РёРЅ.");
-        Preconditions.checkState(cashBox == 1, "РќРµС‚ РєР°СЃСЃС‹ РґР»СЏ РѕРїР»Р°С‚С‹ Р±РµРЅР·РёРЅР°.");
-        String race;
+        waveOrig = null;
+        Preconditions.checkState(enter == 1, "Нет въезда для машин.");
+        Preconditions.checkState(exit == 1, "Нет выезда для машин.");
+        Preconditions.checkState((startX == 0), "Въезд находится не крайних клетках");//|| startX == (topology[0].length-1)
+        Preconditions.checkState((endX == 0), "Выезд находится не крайних клетках");//|| endX == (topology[0].length-1)
+        Preconditions.checkState(trk < 7 && trk > 0, "Нет ТРК для машин.");
+        Preconditions.checkState(cashBox == 1, "Нет кассы для оплаты бензина.");
+        String race = "";
+        List<String> raceList = new ArrayList<>();
         for (int k = 0; k < trkArrayX.size(); k++) {
-
-            race = waveOrig.findPath(startX + 1, startY + 1, trkArrayX.get(k), trkArrayY.get(k));//СЃРІРµСЂС…Сѓ
-            waveOrig.traceOut();
-            race += waveOrig.findPath(trkArrayX.get(k), trkArrayY.get(k), endX + 1, endY + 1);//СЃРІРµСЂС…Сѓ
+            WaveAlg waveCopy = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
+            for (int i = 0; i < topology.length; i++) {
+                int[] ints = topology[i];
+                for (int j = 0; j < ints.length; j++) {
+                    int anInt = ints[j];
+                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != trkArrayX.get(k) && j != trkArrayY.get(k))) {
+                        waveCopy.block(i, j);
+                    }
+                }
+            }
+            race = waveCopy.findPath(startX + 1, startY + 1, trkArrayX.get(k), trkArrayY.get(k));//сверху
+            race += waveCopy.findPath(trkArrayX.get(k), trkArrayY.get(k), endX + 1, endY + 1);//сверху
             race += (endX + " " + endY);
-            waveOrig.traceOut();
+            waveCopy.traceOut();
             race = race.replace("][", " ,");
             race = race.replace("]", ", ");
             race += "]";
+            raceList.add(race);
             System.out.println(race);
+            waveCopy = null;
         }
-        return ResponseEntity.ok("Р Р°Р±РѕС‚Р°РµРј РјСѓР¶РёРєРё");
+        System.out.println(raceList);
+        return ResponseEntity.ok(raceList);
     }
-
 
 }

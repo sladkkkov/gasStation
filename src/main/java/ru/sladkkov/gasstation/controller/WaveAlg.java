@@ -1,9 +1,11 @@
 package ru.sladkkov.gasstation.controller;
 
+import lombok.Data;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@Data
 public class WaveAlg {
     int width;
     int height;
@@ -33,6 +35,9 @@ public class WaveAlg {
 
     }
 
+
+    ;
+
     public void block(int x, int y) {
 
         map[y][x] = wall;
@@ -45,11 +50,11 @@ public class WaveAlg {
 
     public String findPath(int x, int y, int nx, int ny) {
         if (map[y][x] == wall || map[ny][nx] == wall) {
-          return null;
+            return null;
 
         }
 
-         int[][] cloneMap = clone(map);
+        int[][] cloneMap = clone(map);
         List<Point> oldWave = new ArrayList<>();
         oldWave.add(new Point(nx, ny));
         int nstep = 0;
@@ -66,7 +71,7 @@ public class WaveAlg {
                     nx = i.x + dx[d];
                     ny = i.y + dy[d];
 
-                    if (map[ny][nx] == -1||map[ny][nx] == 0) {
+                    if (map[ny][nx] == -1 || map[ny][nx] == 0) {
                         wave.add(new Point(nx, ny));
                         map[ny][nx] = nstep;
                     }
@@ -102,7 +107,7 @@ public class WaveAlg {
         List<String> race = new ArrayList<>();
         for (Point i : wave) {
             map[i.y][i.x] = 0;
-            race.add( (i.x-1)+" "+ (i.y-1));
+            race.add((i.x - 1) + " " + (i.y - 1));
         }
         return race.toString();
     }
