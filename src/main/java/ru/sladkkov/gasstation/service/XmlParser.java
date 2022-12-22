@@ -24,7 +24,6 @@ public class XmlParser {
                         case "inLogo" -> new InTopology(true);
                         case "outLogo" -> new OutTopology(true);
                         case "govno" -> new FreeElement(true);
-                        default->null;
                     });
         }
         return hashMap;
