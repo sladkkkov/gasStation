@@ -1,6 +1,6 @@
 spring:
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: public
   datasource:
@@ -19,4 +19,5 @@ spring:
 jwt:
   token:
     expired: 3600000
-
+server:
+  port: 9090
