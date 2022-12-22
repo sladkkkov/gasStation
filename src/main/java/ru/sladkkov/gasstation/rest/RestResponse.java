@@ -1,4 +1,4 @@
-package ru.sladkkov.gasstation.Rest;
+package ru.sladkkov.gasstation.rest;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

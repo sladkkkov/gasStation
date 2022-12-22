@@ -1,21 +1,31 @@
 package ru.sladkkov.gasstation.controller;
 
 import org.assertj.core.util.Preconditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sladkkov.gasstation.dto.TopologyDto;
+import ru.sladkkov.gasstation.service.XmlParser;
+import ru.sladkkov.gasstation.topology.squareelementmap.impl.TopologyElement;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "api/v1/topology")
 public class TopologyController {
+
+    private final XmlParser xmlParser;
+
+    @Autowired
+    public TopologyController(XmlParser xmlParser) {
+        this.xmlParser = xmlParser;
+    }
+
     // @PostMapping()
     @PostConstruct
     public ResponseEntity<String> topologyCreateController() throws CloneNotSupportedException {//@RequestBody TopologyDto topologyDTO) {
@@ -25,12 +35,15 @@ public class TopologyController {
         topologyDTO.setTopologyLength(10);
         topologyDTO.setTopologyWidth(10);
         topologyDTO.setTopologyServiceLength(0);
+
         int enter = 0;
         int exit = 0;
         int trk = 0;
         int cashBox = 0;
+
         List<Integer> trkArrayX = new ArrayList<>();
         List<Integer> trkArrayY = new ArrayList<>();
+
         int startX = 0;
         int startY = 0;
         int endX = 0;
@@ -48,7 +61,9 @@ public class TopologyController {
         WaveAlg waveOrig = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
         for (int i = 0; i < topology.length; i++) {
             int[] ints = topology[i];
+
             for (int j = 0; j < ints.length; j++) {
+
                 int anInt = ints[j];
                 if (anInt == 1) {
                     startX = i;
@@ -79,7 +94,10 @@ public class TopologyController {
         Preconditions.checkState((endX == 0), "Выезд находится не крайних клетках");//|| endX == (topology[0].length-1)
         Preconditions.checkState(trk < 7 && trk > 0, "Нет ТРК для машин.");
         Preconditions.checkState(cashBox == 1, "Нет кассы для оплаты бензина.");
+
+
         String race;
+
         for (int k = 0; k < trkArrayX.size(); k++) {
 
             race = waveOrig.findPath(startX + 1, startY + 1, trkArrayX.get(k), trkArrayY.get(k));//сверху
@@ -95,5 +113,9 @@ public class TopologyController {
         return ResponseEntity.ok("Работаем мужики");
     }
 
-
+    @GetMapping("/parse/xml/{length}/{width}")
+    public ResponseEntity<String> parseXmlToMassiveObject(@RequestBody String xmlFile, @PathVariable int length, @PathVariable int width) throws IOException {
+        TopologyElement[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
+        return ResponseEntity.ok(Arrays.deepToString(topologyElements));
+    }
 }
