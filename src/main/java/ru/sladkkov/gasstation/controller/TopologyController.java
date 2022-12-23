@@ -4,18 +4,10 @@ import org.assertj.core.util.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.sladkkov.gasstation.dto.TopologyDto;
 import ru.sladkkov.gasstation.service.XmlParser;
-import ru.sladkkov.gasstation.topology.squareelementmap.impl.TopologyElement;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static java.lang.annotation.ElementType.FIELD;
+import java.util.*;
 
 
 @RestController
@@ -30,16 +22,36 @@ public class TopologyController {
         this.xmlParser = xmlParser;
     }
 
-    // @PostMapping()
-    @PostConstruct
+    @PostMapping()
 
-    public ResponseEntity<List<String>> topologyCreateController() {//@RequestBody TopologyDto topologyDTO) {
-//todo parser mainToplogy[][] and serviceTopogy[][]
-        TopologyDto topologyDTO = new TopologyDto();
-        topologyDTO.setTopology(new int[10][10]);
-        topologyDTO.setTopologyLength(10);
-        topologyDTO.setTopologyWidth(10);
-        topologyDTO.setTopologyServiceLength(0);
+    public ResponseEntity<Map<String, List<String>>> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService) throws IOException {//@RequestBody TopologyDto topologyDTO) {
+
+        int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
+        int[][] mainTopology = new int[width][length - lengthService];
+        int[][] serviceTopology = new int[width][lengthService];
+        int l = 0;
+        for (int i = 0; i < topologyElements.length; i++) {
+            {
+
+                for (int j = 0; j < topologyElements[i].length; j++) {
+
+                    if (j < length - lengthService)
+                        mainTopology[i][j] = topologyElements[i][j];
+                    else {
+
+                        serviceTopology[i][l] = topologyElements[i][j];
+                        l++;
+                    }
+                }
+                l = 0;
+
+            }
+        }
+        //    TopologyDto topologyDTO = new TopologyDto();
+        //    topologyDTO.setTopology(new int[10][10]);
+        //   topologyDTO.setTopologyLength(10);
+        //    topologyDTO.setTopologyWidth(10);
+        //    topologyDTO.setTopologyServiceLength(0);
         int enter = 0;//1
         int exit = 0;//2
         int trk = 0;//3
@@ -52,96 +64,110 @@ public class TopologyController {
         int endY = 0;
 
 
-        int[][] topology = topologyDTO.getTopology();//Optional.ofNullable(topologyDTO.getTopology()); //основная карта
-        topology[0][1] = 1;
-        topology[0][7] = 2;
-        topology[7][3] = 3;
-        topology[7][7] = 3;
-        topology[3][5] = 3;
-        topology[4][7] = 4;
+        //  int[][] mainTopology = topologyDTO.getTopology();//Optional.ofNullable(topologyDTO.getTopology()); //основная карта
+        //     mainTopology[0][1] = 1;
+        //    mainTopology[0][7] = 2;
+        //     mainTopology[7][3] = 3;
+        //     mainTopology[7][7] = 3;
+        //     mainTopology[3][5] = 3;
+        //    mainTopology[4][7] = 4;
 
-        WaveAlg waveOrig = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
-        for (int i = 0; i < topology.length; i++) {
-            int[] ints = topology[i];
+        WaveAlg waveOrig = new WaveAlg( mainTopology.length+1,mainTopology[0].length+1);
+        for (int i = 0; i < mainTopology.length; i++) {
+            int[] ints = mainTopology[i];
             for (int j = 0; j < ints.length; j++) {
                 int anInt = ints[j];
                 if (anInt == 1) {
-                    startX = i;
-                    startY = j;
+                    startX = j;
+                    startY = i;
                     enter++;
                 }
                 if (anInt == 2) {
-                    endX = i;
-                    endY = j;
+                    endX = j;
+                    endY = i;
                     exit++;
                 }
                 if (anInt == 3) {
                     trk++;
-                    Preconditions.checkState(!(i == 0 || j == 0 || i == topology.length - 1 || j == ints.length - 1), "ТРК должны быть расположены не на границах топологии.");
-                    trkArrayX.add(i);
-                    trkArrayY.add(j);
+                    Preconditions.checkState(!(i == 0 || j == 0 || i == mainTopology.length - 1 || j == ints.length - 1), "ТРК должны быть расположены не на границах топологии.");
+                    trkArrayX.add(j);
+                    trkArrayY.add(i);
                 }
                 if (anInt == 4)
                     cashBox++;
                 if (anInt != 0) {
 
                     if (j == 0 && i == 0) {
-                        Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
-                                        (topology[i + 1][j] == 0) &&
-                                        (topology[i][j + 1] == 0),
+                        Preconditions.checkState((mainTopology[i + 1][j + 1] == 0) &&
+                                        (mainTopology[i + 1][j] == 0) &&
+                                        (mainTopology[i][j + 1] == 0),
                                 "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
                     } else {
-                        if (j == 0) {
-                            Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
-                                            (topology[i + 1][j] == 0) &&
-                                            (topology[i][j + 1] == 0) &&
-                                            (topology[i - 1][j + 1] == 0) &&
-                                            (topology[i - 1][j] == 0),
+                        if (i == mainTopology.length - 1 && j == 0) {
+                            Preconditions.checkState((mainTopology[i][j + 1] == 0) &&
+                                            (mainTopology[i - 1][j + 1] == 0) &&
+                                            (mainTopology[i - 1][j] == 0),
                                     "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
-
                         } else {
-                            if (i == 0) {
-
-                                Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
-                                        (topology[i + 1][j] == 0) &&
-                                        (topology[i + 1][j - 1] == 0) &&
-                                        (topology[i][j + 1] == 0) &&
-                                        (topology[i][j - 1] == 0), "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
-                            } else if (i == topology.length - 1 && j == topology[i].length - 1) {
-                                Preconditions.checkState(
-                                        (topology[i][j - 1] == 0) &&
-                                                (topology[i - 1][j] == 0) &&
-                                                (topology[i - 1][j - 1] == 0),
+                            if (i == 0 && j == mainTopology[i].length - 1) {
+                                Preconditions.checkState((mainTopology[i + 1][j] == 0) &&
+                                                (mainTopology[i + 1][j - 1] == 0) &&
+                                                (mainTopology[i][j - 1] == 0),
                                         "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
-
                             } else {
-                                if (i == topology.length - 1) {
-                                    Preconditions.checkState(
-                                            (topology[i][j + 1] == 0) &&
-                                                    (topology[i][j - 1] == 0) &&
-                                                    (topology[i - 1][j + 1] == 0) &&
-                                                    (topology[i - 1][j] == 0) &&
-                                                    (topology[i - 1][j - 1] == 0),
+                                if (j == 0) {
+                                    Preconditions.checkState((mainTopology[i + 1][j + 1] == 0) &&
+                                                    (mainTopology[i + 1][j] == 0) &&
+                                                    (mainTopology[i][j + 1] == 0) &&
+                                                    (mainTopology[i - 1][j + 1] == 0) &&
+                                                    (mainTopology[i - 1][j] == 0),
                                             "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+
                                 } else {
-                                    if (j == topology[i].length - 1) {
+                                    if (i == 0) {
+
+                                        Preconditions.checkState((mainTopology[i + 1][j + 1] == 0) &&
+                                                (mainTopology[i + 1][j] == 0) &&
+                                                (mainTopology[i + 1][j - 1] == 0) &&
+                                                (mainTopology[i][j + 1] == 0) &&
+                                                (mainTopology[i][j - 1] == 0), "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                    } else if (i == mainTopology.length - 1 && j == mainTopology[i].length - 1) {
                                         Preconditions.checkState(
-                                                (topology[i + 1][j] == 0) &&
-                                                        (topology[i + 1][j - 1] == 0) &&
-                                                        (topology[i][j - 1] == 0) &&
-                                                        (topology[i - 1][j] == 0) &&
-                                                        (topology[i - 1][j - 1] == 0),
+                                                (mainTopology[i][j - 1] == 0) &&
+                                                        (mainTopology[i - 1][j] == 0) &&
+                                                        (mainTopology[i - 1][j - 1] == 0),
                                                 "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+
                                     } else {
-                                        Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
-                                                        (topology[i + 1][j] == 0) &&
-                                                        (topology[i + 1][j - 1] == 0) &&
-                                                        (topology[i][j + 1] == 0) &&
-                                                        (topology[i][j - 1] == 0) &&
-                                                        (topology[i - 1][j + 1] == 0) &&
-                                                        (topology[i - 1][j] == 0) &&
-                                                        (topology[i - 1][j - 1] == 0),
-                                                "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                        if (i == mainTopology.length - 1) {
+                                            Preconditions.checkState(
+                                                    (mainTopology[i][j + 1] == 0) &&
+                                                            (mainTopology[i][j - 1] == 0) &&
+                                                            (mainTopology[i - 1][j + 1] == 0) &&
+                                                            (mainTopology[i - 1][j] == 0) &&
+                                                            (mainTopology[i - 1][j - 1] == 0),
+                                                    "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                        } else {
+                                            if (j == mainTopology[i].length - 1) {
+                                                Preconditions.checkState(
+                                                        (mainTopology[i + 1][j] == 0) &&
+                                                                (mainTopology[i + 1][j - 1] == 0) &&
+                                                                (mainTopology[i][j - 1] == 0) &&
+                                                                (mainTopology[i - 1][j] == 0) &&
+                                                                (mainTopology[i - 1][j - 1] == 0),
+                                                        "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                            } else {
+                                                Preconditions.checkState((mainTopology[i + 1][j + 1] == 0) &&
+                                                                (mainTopology[i + 1][j] == 0) &&
+                                                                (mainTopology[i + 1][j - 1] == 0) &&
+                                                                (mainTopology[i][j + 1] == 0) &&
+                                                                (mainTopology[i][j - 1] == 0) &&
+                                                                (mainTopology[i - 1][j + 1] == 0) &&
+                                                                (mainTopology[i - 1][j] == 0) &&
+                                                                (mainTopology[i - 1][j - 1] == 0),
+                                                        "Элементы топологии должны располагаться как минимум в одной клетке друг от друга");
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -157,25 +183,25 @@ public class TopologyController {
         waveOrig = null;
         Preconditions.checkState(enter == 1, "Нет въезда для машин.");
         Preconditions.checkState(exit == 1, "Нет выезда для машин.");
-        Preconditions.checkState((startX == 0), "Въезд находится не крайних клетках");//|| startX == (topology[0].length-1)
-        Preconditions.checkState((endX == 0), "Выезд находится не крайних клетках");//|| endX == (topology[0].length-1)
+        Preconditions.checkState((startY == 0), "Въезд находится не крайних клетках");//|| startX == (topology[0].length-1)
+        Preconditions.checkState((endY == 0), "Выезд находится не крайних клетках");//|| endX == (topology[0].length-1)
         Preconditions.checkState(trk < 7 && trk > 0, "Нет ТРК для машин.");
         Preconditions.checkState(cashBox == 1, "Нет кассы для оплаты бензина.");
         String race = "";
         List<String> raceList = new ArrayList<>();
         for (int k = 0; k < trkArrayX.size(); k++) {
-            WaveAlg waveCopy = new WaveAlg(topology.length, topology[0].length - topologyDTO.getTopologyServiceLength());
-            for (int i = 0; i < topology.length; i++) {
-                int[] ints = topology[i];
+            WaveAlg waveCopy = new WaveAlg(mainTopology.length+2, mainTopology[0].length+2);
+            for (int i = 0; i < mainTopology.length; i++) {
+                int[] ints = mainTopology[i];
                 for (int j = 0; j < ints.length; j++) {
                     int anInt = ints[j];
-                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != trkArrayX.get(k) && j != trkArrayY.get(k))) {
-                        waveCopy.block(i, j);
+                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != trkArrayY.get(k) && j != trkArrayX.get(k))) {
+                        waveCopy.block(j+1, i+1);
                     }
                 }
             }
-            race = waveCopy.findPath(startX + 1, startY + 1, trkArrayX.get(k), trkArrayY.get(k));//сверху
-            race += waveCopy.findPath(trkArrayX.get(k), trkArrayY.get(k), endX + 1, endY + 1);//сверху
+            race = waveCopy.findPath(startX + 1, startY + 1, trkArrayX.get(k)+1, trkArrayY.get(k)+1);//сверху
+            race += waveCopy.findPath(trkArrayX.get(k)+1, trkArrayY.get(k)+1, endX + 1, endY + 1);//сверху
             race += (endX + " " + endY);
             waveCopy.traceOut();
             race = race.replace("][", " ,");
@@ -185,18 +211,21 @@ public class TopologyController {
             System.out.println(race);
             waveCopy = null;
         }
+
+        Map<String, List<String>> mapResult = new HashMap<>();
+        mapResult.put("main", raceList);
         System.out.println(raceList);
-        serviceTopology(topology);
-        return ResponseEntity.ok(raceList);
+        mapResult.put("service", serviceTopology(serviceTopology));
+        return ResponseEntity.ok(mapResult);
     }
 
-    public List<String> serviceTopology( int[][] topology) {
+    public List<String> serviceTopology(int[][] topology) {
 
         int baks = 0;
         ArrayList<Integer> bakArrayX = new ArrayList<>();
         ArrayList<Integer> bakArrayY = new ArrayList<>();
-        int startX=0;
-        int startY=0;
+        int startX = 0;
+        int startY = 0;
         for (int i = 0; i < topology.length; i++) {
             int[] ints = topology[i];
             for (int j = 0; j < ints.length; j++) {
@@ -211,15 +240,15 @@ public class TopologyController {
                     Preconditions.checkState(false, "ТРК не должна находится в служебной зоне");
                 }
                 if (anInt == 7) {
-                 startX=i;
-                 startY=j;
+                    startX = j;
+                    startY = i;
                 }
                 if (anInt == 4)
                     Preconditions.checkState(false, "Касса не должна находится в служебной зоне");
                 if (anInt == 5) {
                     baks++;
-                    bakArrayX.add(i);
-                    bakArrayY.add(j);
+                    bakArrayX.add(j);
+                    bakArrayY.add(i);
 
                     if (j == 0 && i == 0) {
                         Preconditions.checkState((topology[i + 1][j + 1] == 0) &&
@@ -294,18 +323,18 @@ public class TopologyController {
         String race;
         List<String> raceList = new ArrayList<>();
         for (int k = 0; k < bakArrayX.size(); k++) {
-            WaveAlg waveCopy = new WaveAlg(topology.length, topology[0].length);
+            WaveAlg waveCopy = new WaveAlg(topology.length+2, topology[0].length+2);
             for (int i = 0; i < topology.length; i++) {
                 int[] ints = topology[i];
                 for (int j = 0; j < ints.length; j++) {
                     int anInt = ints[j];
-                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != bakArrayY.get(k) && j != bakArrayY.get(k))) {
-                        waveCopy.block(i, j);
+                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != bakArrayY.get(k) && j != bakArrayX.get(k))) {
+                        waveCopy.block(j+1, i+1);
                     }
                 }
             }
-            race = waveCopy.findPath(startX + 1, startY + 1, bakArrayX.get(k), bakArrayY.get(k));//сверху
-            race += waveCopy.findPath(bakArrayX.get(k), bakArrayY.get(k), startX + 1, startY + 1);//сверху
+            race = waveCopy.findPath(startX + 1, startY + 1, bakArrayX.get(k)+1, bakArrayY.get(k)+1);//сверху
+            race += waveCopy.findPath(bakArrayX.get(k)+1, bakArrayY.get(k)+1, startX + 1, startY + 1);//сверху
             race += (startX + " " + startY);
             waveCopy.traceOut();
             race = race.replace("][", " ,");
@@ -319,13 +348,10 @@ public class TopologyController {
     }
 
 
-
-
-
-
-@GetMapping("/parse/xml/{length}/{width}")
-public ResponseEntity<String> parseXmlToMassiveObject(@RequestBody String xmlFile,@PathVariable int length,@PathVariable int width)throws IOException{
-        TopologyElement[][]topologyElements=xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile),length,width);
+    @GetMapping("/parse/xml/{length}/{width}")
+    public ResponseEntity<String> parseXmlToMassiveObject(@RequestBody String xmlFile, @PathVariable int length,
+                                                          @PathVariable int width) throws IOException {
+        int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
         return ResponseEntity.ok(Arrays.deepToString(topologyElements));
-        }
-        }
+    }
+}

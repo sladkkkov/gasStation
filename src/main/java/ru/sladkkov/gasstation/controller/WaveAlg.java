@@ -16,7 +16,7 @@ public class WaveAlg {
     public WaveAlg(int width, int height) {
         this.width = width;
         this.height = height;
-        map = new int[width + 2][height + 2];
+        map = new int[width][height];
 
 
         for (int i = 0; i < width; i++) {
@@ -26,11 +26,11 @@ public class WaveAlg {
         }
         for (int i = 0; i < width; i++) {
             map[i][0] = wall;
-            map[width - 1][i] = wall;
+            map[i][height-1] = wall;
         }
         for (int i = 0; i < height; i++) {
             map[0][i] = wall;
-            map[i][height - 1] = wall;
+            map[width-1][i] = wall;
         }
 
     }
