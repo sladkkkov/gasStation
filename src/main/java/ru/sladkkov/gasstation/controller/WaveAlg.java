@@ -48,7 +48,7 @@ public class WaveAlg {
         map[y][x] = wall;
     }
 
-    public String findPath(int x, int y, int nx, int ny) {
+    public String findPath(int x, int y, int nx, int ny,int length) {
         if (map[y][x] == wall || map[ny][nx] == wall) {
             return null;
 
@@ -107,7 +107,70 @@ public class WaveAlg {
         List<String> race = new ArrayList<>();
         for (Point i : wave) {
             map[i.y][i.x] = 0;
-            race.add((i.x - 1) + " " + (i.y - 1));
+            race.add(String.valueOf((i.x - 1)  + (i.y - 1)*length));
+        }
+        return race.toString();
+    }
+    public String findPathService(int x, int y, int nx, int ny,int length, int lengthService) {
+        if (map[y][x] == wall || map[ny][nx] == wall) {
+            return null;
+
+        }
+
+        int[][] cloneMap = clone(map);
+        List<Point> oldWave = new ArrayList<>();
+        oldWave.add(new Point(nx, ny));
+        int nstep = 0;
+        map[ny][nx] = nstep;
+
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {-1, 0, 1, 0};
+
+        while (oldWave.size() > 0) {
+            nstep++;
+            wave.clear();
+            for (Point i : oldWave) {
+                for (int d = 0; d < 4; d++) {
+                    nx = i.x + dx[d];
+                    ny = i.y + dy[d];
+
+                    if (map[ny][nx] == -1 || map[ny][nx] == 0) {
+                        wave.add(new Point(nx, ny));
+                        map[ny][nx] = nstep;
+                    }
+
+                }
+            }
+            oldWave = new ArrayList<>(wave);
+        }
+
+        boolean flag;
+        wave.clear();
+        wave.add(new Point(x, y));
+        while (map[y][x] != 0) {
+            flag = true;
+            for (int d = 0; d < 4; d++) {
+                nx = x + dx[d];
+                ny = y + dy[d];
+                if (map[y][x] - 1 == map[ny][nx]) {
+                    x = nx;
+                    y = ny;
+                    wave.add(new Point(x, y));
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                System.out.println("Выхода нет");
+                break;
+            }
+        }
+
+        map = cloneMap;
+        List<String> race = new ArrayList<>();
+        for (Point i : wave) {
+            map[i.y][i.x] = 0;
+            race.add(String.valueOf((i.x - 1)+(length-lengthService)  + (i.y - 1)*length));
         }
         return race.toString();
     }

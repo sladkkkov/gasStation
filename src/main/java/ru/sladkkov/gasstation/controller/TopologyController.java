@@ -17,6 +17,8 @@ public class TopologyController {
 
     private final XmlParser xmlParser;
 
+    Map<String, List<String>> bufferResult;
+
     @Autowired
     public TopologyController(XmlParser xmlParser) {
         this.xmlParser = xmlParser;
@@ -72,7 +74,7 @@ public class TopologyController {
         //     mainTopology[3][5] = 3;
         //    mainTopology[4][7] = 4;
 
-        WaveAlg waveOrig = new WaveAlg( mainTopology.length+1,mainTopology[0].length+1);
+        WaveAlg waveOrig = new WaveAlg(mainTopology.length + 1, mainTopology[0].length + 1);
         for (int i = 0; i < mainTopology.length; i++) {
             int[] ints = mainTopology[i];
             for (int j = 0; j < ints.length; j++) {
@@ -95,6 +97,9 @@ public class TopologyController {
                 }
                 if (anInt == 4)
                     cashBox++;
+                if (anInt == 5) {
+                    Preconditions.checkState(false, "Топливный бак не должен находится в служебной зоне");
+                }
                 if (anInt != 0) {
 
                     if (j == 0 && i == 0) {
@@ -190,19 +195,19 @@ public class TopologyController {
         String race = "";
         List<String> raceList = new ArrayList<>();
         for (int k = 0; k < trkArrayX.size(); k++) {
-            WaveAlg waveCopy = new WaveAlg(mainTopology.length+2, mainTopology[0].length+2);
+            WaveAlg waveCopy = new WaveAlg(mainTopology.length + 2, mainTopology[0].length + 2);
             for (int i = 0; i < mainTopology.length; i++) {
                 int[] ints = mainTopology[i];
                 for (int j = 0; j < ints.length; j++) {
                     int anInt = ints[j];
                     if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != trkArrayY.get(k) && j != trkArrayX.get(k))) {
-                        waveCopy.block(j+1, i+1);
+                        waveCopy.block(j + 1, i + 1);
                     }
                 }
             }
-            race = waveCopy.findPath(startX + 1, startY + 1, trkArrayX.get(k)+1, trkArrayY.get(k)+1);//сверху
-            race += waveCopy.findPath(trkArrayX.get(k)+1, trkArrayY.get(k)+1, endX + 1, endY + 1);//сверху
-            race += (endX + " " + endY);
+            race = waveCopy.findPath(startX + 1, startY + 1, trkArrayX.get(k) + 1, trkArrayY.get(k) + 1, topologyElements[0].length);//сверху
+            race += waveCopy.findPath(trkArrayX.get(k) + 1, trkArrayY.get(k) + 1, endX + 1, endY + 1, topologyElements[0].length);//сверху
+            race += (endX + endY * topologyElements[0].length);
             waveCopy.traceOut();
             race = race.replace("][", " ,");
             race = race.replace("]", ", ");
@@ -215,11 +220,13 @@ public class TopologyController {
         Map<String, List<String>> mapResult = new HashMap<>();
         mapResult.put("main", raceList);
         System.out.println(raceList);
-        mapResult.put("service", serviceTopology(serviceTopology));
+        mapResult.put("service", serviceTopology(serviceTopology, topologyElements));
+        bufferResult = mapResult;
+        //todo toplogyRepository.save(topologyXml)
         return ResponseEntity.ok(mapResult);
     }
 
-    public List<String> serviceTopology(int[][] topology) {
+    public List<String> serviceTopology(int[][] topology, int[][] allTopology) {
 
         int baks = 0;
         ArrayList<Integer> bakArrayX = new ArrayList<>();
@@ -323,22 +330,23 @@ public class TopologyController {
         String race;
         List<String> raceList = new ArrayList<>();
         for (int k = 0; k < bakArrayX.size(); k++) {
-            WaveAlg waveCopy = new WaveAlg(topology.length+2, topology[0].length+2);
+            WaveAlg waveCopy = new WaveAlg(topology.length + 2, topology[0].length + 2);
             for (int i = 0; i < topology.length; i++) {
                 int[] ints = topology[i];
                 for (int j = 0; j < ints.length; j++) {
                     int anInt = ints[j];
                     if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != bakArrayY.get(k) && j != bakArrayX.get(k))) {
-                        waveCopy.block(j+1, i+1);
+                        waveCopy.block(j + 1, i + 1);
                     }
                 }
             }
-            race = waveCopy.findPath(startX + 1, startY + 1, bakArrayX.get(k)+1, bakArrayY.get(k)+1);//сверху
-            race += waveCopy.findPath(bakArrayX.get(k)+1, bakArrayY.get(k)+1, startX + 1, startY + 1);//сверху
-            race += (startX + " " + startY);
+            race = waveCopy.findPathService(startX + 1, startY + 1, bakArrayX.get(k) + 1, bakArrayY.get(k) + 1, allTopology[0].length, topology[0].length);//сверху
+            race += waveCopy.findPathService(bakArrayX.get(k) + 1, bakArrayY.get(k) + 1, startX + 1, startY + 1, allTopology[0].length, topology[0].length);//сверху
+            race += (startX + allTopology[0].length - topology[0].length + startY * allTopology[0].length);
             waveCopy.traceOut();
             race = race.replace("][", " ,");
             race = race.replace("]", ", ");
+            race += "]";
             raceList.add(race);
             System.out.println(race);
             waveCopy = null;
@@ -353,5 +361,10 @@ public class TopologyController {
                                                           @PathVariable int width) throws IOException {
         int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
         return ResponseEntity.ok(Arrays.deepToString(topologyElements));
+    }
+
+    @GetMapping("/routes")
+    Map<String, List<String>> getRoutes() {
+        return bufferResult;
     }
 }
