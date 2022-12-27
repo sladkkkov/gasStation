@@ -1,9 +1,12 @@
 package ru.sladkkov.gasstation.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.sladkkov.gasstation.model.Topology;
+import ru.sladkkov.gasstation.repository.TopologyRepository;
 import ru.sladkkov.gasstation.service.XmlParser;
 
 import java.io.IOException;
@@ -11,22 +14,19 @@ import java.util.*;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "api/v1/topology")
 public class TopologyController {
 
 
     private final XmlParser xmlParser;
-
+    private final TopologyRepository topologyRepository;
     Map<String, List<String>> bufferResult;
 
-    @Autowired
-    public TopologyController(XmlParser xmlParser) {
-        this.xmlParser = xmlParser;
-    }
 
     @PostMapping()
 
-    public ResponseEntity<Map<String, List<String>>> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService) throws IOException {//@RequestBody TopologyDto topologyDTO) {
+    public ResponseEntity<Map<String, List<String>>> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService, @RequestParam Long id) throws IOException {//@RequestBody TopologyDto topologyDTO) {
 
         int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
         int[][] mainTopology = new int[width][length - lengthService];
@@ -222,6 +222,14 @@ public class TopologyController {
         System.out.println(raceList);
         mapResult.put("service", serviceTopology(serviceTopology, topologyElements));
         bufferResult = mapResult;
+        Topology topology = new Topology();
+        topology.setId(id);
+        topology.setWidth(width);
+        topology.setLength(length);
+        topology.setXmlTopology(xmlFile);
+        topology.setLengthService(lengthService);
+        topology.setRoutes(mapResult.toString());
+        topologyRepository.save(topology);
         //todo toplogyRepository.save(topologyXml)
         return ResponseEntity.ok(mapResult);
     }
@@ -364,7 +372,7 @@ public class TopologyController {
     }
 
     @GetMapping("/routes")
-    Map<String, List<String>> getRoutes() {
-        return bufferResult;
+    public Topology getRoutes(@RequestParam Long id) {
+        return topologyRepository.findById(id).get();
     }
 }
