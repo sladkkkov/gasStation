@@ -3,6 +3,8 @@ version: '2'
 services:
   app:
     image: 'sladkkov/gas:1.1'
+    ports:
+      - 8080:8080
     build:
       context: .
     container_name: app
