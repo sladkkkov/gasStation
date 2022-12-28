@@ -2,7 +2,6 @@ package ru.sladkkov.gasstation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Preconditions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sladkkov.gasstation.model.Topology;
@@ -24,8 +23,8 @@ public class TopologyController {
     Map<String, List<String>> bufferResult;
 
 
+    @CrossOrigin
     @PostMapping()
-
     public ResponseEntity<Map<String, List<String>>> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService, @RequestParam Long id) throws IOException {//@RequestBody TopologyDto topologyDTO) {
 
         int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
@@ -363,14 +362,15 @@ public class TopologyController {
         return raceList;
     }
 
-
-    @GetMapping("/parse/xml/{length}/{width}")
+    @CrossOrigin
+    @PostMapping("/parse/xml/{length}/{width}")
     public ResponseEntity<String> parseXmlToMassiveObject(@RequestBody String xmlFile, @PathVariable int length,
                                                           @PathVariable int width) throws IOException {
         int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
         return ResponseEntity.ok(Arrays.deepToString(topologyElements));
     }
 
+    @CrossOrigin
     @GetMapping("/routes")
     public Topology getRoutes(@RequestParam Long id) {
         return topologyRepository.findById(id).get();

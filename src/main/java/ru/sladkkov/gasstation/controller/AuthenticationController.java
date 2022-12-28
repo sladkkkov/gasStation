@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.sladkkov.gasstation.service.AuthenticationService;
 import ru.sladkkov.gasstation.dto.request.LoginRequest;
 import ru.sladkkov.gasstation.dto.response.JwtResponse;
+import ru.sladkkov.gasstation.service.AuthenticationService;
 
 @RestController
 @RequestMapping(value = "api/v1")
@@ -36,6 +36,7 @@ public class AuthenticationController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/admin/1")
+    @CrossOrigin
     public ResponseEntity<String> getString() {
         return ResponseEntity.ok("Проверка преАвторайза ");
     }
