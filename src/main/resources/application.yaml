@@ -20,4 +20,4 @@ jwt:
   token:
     expired: 3600000
 server:
-  port: 9090
+  port: 8080

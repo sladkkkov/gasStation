@@ -2,9 +2,9 @@ package ru.sladkkov.gasstation.validation;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import ru.sladkkov.gasstation.model.User;
 import ru.sladkkov.gasstation.topology.freemapelement.Car;
 import ru.sladkkov.gasstation.topology.freemapelement.Fuel;
-import ru.sladkkov.gasstation.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -56,13 +56,6 @@ class PositiveIntegerConstraintValidatorTest {
                 .forEach(System.out::println);
     }
 
-    @Test
-    void testUserValidatorsWithTrueParameters() {
-        final User user = new User(1L, "Danila", "Sladkov");
-
-        Set<ConstraintViolation<User>> validates = validator.validate(user);
-        assertEquals(0, validates.size());
-    }
 
     @Test
     void testFuelValidatorsWithFalseParameters() {
