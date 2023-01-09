@@ -1,5 +1,6 @@
 package ru.sladkkov.gasstation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Preconditions;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class TopologyController {
 
     @CrossOrigin
     @PostMapping()
-    public ResponseEntity<Map<String, List<String>>> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService, @RequestParam Long id) throws IOException {//@RequestBody TopologyDto topologyDTO) {
+    public ResponseEntity<String> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService, @RequestParam Long id) throws IOException {//@RequestBody TopologyDto topologyDTO) {
 
         int[][] topologyElements = xmlParser.parseHashMapToMassiveObject(xmlParser.parseXmlToHashMapOfIdAndTypeObject(xmlFile), length, width);
         int[][] mainTopology = new int[width][length - lengthService];
@@ -232,11 +233,14 @@ public class TopologyController {
         topology.setLength(length);
         topology.setXmlTopology(xmlFile);
         topology.setLengthService(lengthService);
-        topology.setRoutes(mapResult.toString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+System.err.println(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
+        topology.setRoutes(  objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
         topologyRepository.save(topology);
 
         //todo toplogyRepository.save(topologyXml)
-        return ResponseEntity.ok(mapResult);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
     }
 
     public List<String> serviceTopology(int[][] topology, int[][] allTopology) {
