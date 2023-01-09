@@ -199,7 +199,12 @@ public class TopologyController {
                 int[] ints = mainTopology[i];
                 for (int j = 0; j < ints.length; j++) {
                     int anInt = ints[j];
-                    if (anInt != 0 && anInt != 1 && anInt != 2 && (anInt != trkArrayY.get(k) && j != trkArrayX.get(k))) {
+                    if (anInt != 0 && anInt != 1 && anInt != 2) {
+                        if (!(i == trkArrayY.get(k) && j == trkArrayX.get(k))) {
+                            waveCopy.block(j + 1, i + 1);
+                        }
+                    }
+                    if (i == 0 && anInt == 0) {
                         waveCopy.block(j + 1, i + 1);
                     }
                 }
@@ -229,6 +234,7 @@ public class TopologyController {
         topology.setLengthService(lengthService);
         topology.setRoutes(mapResult.toString());
         topologyRepository.save(topology);
+
         //todo toplogyRepository.save(topologyXml)
         return ResponseEntity.ok(mapResult);
     }
@@ -372,7 +378,12 @@ public class TopologyController {
 
     @CrossOrigin
     @GetMapping("/routes")
-    public Topology getRoutes(@RequestParam Long id) {
-        return topologyRepository.findById(id).get();
+    public ResponseEntity<Topology> getRoute(@RequestParam Long id) {
+        return ResponseEntity.ok(topologyRepository.findById(id).get());
+    }
+    @CrossOrigin
+    @GetMapping("/routes/all")
+    public ResponseEntity<List<Topology>> getRoutes() {
+        return ResponseEntity.ok(topologyRepository.findAll());
     }
 }
