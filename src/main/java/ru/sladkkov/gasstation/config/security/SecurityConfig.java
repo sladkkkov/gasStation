@@ -8,9 +8,10 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.sladkkov.gasstation.security.UserDetailsServiceImpl;
 import ru.sladkkov.gasstation.security.jwt.ConfigurerFilter;
 
@@ -50,18 +51,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD");
+            }
+        };
+    }
+
+    @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("api/v1/login").permitAll()
-                .antMatchers("api/v1/register").permitAll()
-                .antMatchers("api/v1/admin/**").hasRole("ADMIN")
-                .antMatchers("api/v1/user/**").hasRole("USER")
-                .antMatchers("api/v1/topologyCreate").permitAll()
+                .antMatchers("**").permitAll()
                 .and()
                 .apply(configurerFilter);
 

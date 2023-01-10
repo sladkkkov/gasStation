@@ -36,8 +36,6 @@ public class WaveAlg {
     }
 
 
-    ;
-
     public void block(int x, int y) {
 
         map[y][x] = wall;
@@ -61,7 +59,7 @@ public class WaveAlg {
         map[ny][nx] = nstep;
 
         int[] dx = {0, 1, 0, -1};
-        int[] dy = {-1, 0, 1, 0};
+        int[] dy = {1, 0, -1, 0};
 
         while (oldWave.size() > 0) {
             nstep++;

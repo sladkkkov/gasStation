@@ -15,6 +15,7 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin()
 @RequestMapping(value = "api/v1/topology")
 public class TopologyController {
 
@@ -24,7 +25,6 @@ public class TopologyController {
     Map<String, List<String>> bufferResult;
 
 
-    @CrossOrigin
     @PostMapping()
     public ResponseEntity<String> topologyCreateController(@RequestBody String xmlFile, @RequestParam int length, @RequestParam int width, @RequestParam int lengthService, @RequestParam Long id) throws IOException {//@RequestBody TopologyDto topologyDTO) {
 
@@ -235,12 +235,12 @@ public class TopologyController {
         topology.setLengthService(lengthService);
 
         ObjectMapper objectMapper = new ObjectMapper();
-System.err.println(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
-        topology.setRoutes(  objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
+        System.err.println(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[", "[[").replaceAll("]\"]", "]]").replaceAll("\",\"", ","));
+        topology.setRoutes(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[", "[[").replaceAll("]\"]", "]]").replaceAll("\",\"", ","));
         topologyRepository.save(topology);
 
         //todo toplogyRepository.save(topologyXml)
-        return ResponseEntity.ok(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[","[[").replaceAll("]\"]","]]").replaceAll("\",\"",","));
+        return ResponseEntity.ok(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\\[", "[[").replaceAll("]\"]", "]]").replaceAll("\",\"", ","));
     }
 
     public List<String> serviceTopology(int[][] topology, int[][] allTopology) {
@@ -372,7 +372,6 @@ System.err.println(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\
         return raceList;
     }
 
-    @CrossOrigin
     @PostMapping("/parse/xml/{length}/{width}")
     public ResponseEntity<String> parseXmlToMassiveObject(@RequestBody String xmlFile, @PathVariable int length,
                                                           @PathVariable int width) throws IOException {
@@ -380,14 +379,13 @@ System.err.println(objectMapper.writeValueAsString(mapResult).replaceAll("\\[\"\
         return ResponseEntity.ok(Arrays.deepToString(topologyElements));
     }
 
-    @CrossOrigin
     @GetMapping("/routes")
     public ResponseEntity<Topology> getRoute(@RequestParam Long id) {
         return ResponseEntity.ok(topologyRepository.findById(id).get());
     }
-    @CrossOrigin
+
     @GetMapping("/routes/all")
     public ResponseEntity<List<Topology>> getRoutes() {
-        return ResponseEntity.ok(topologyRepository.findAll());
+        return ResponseEntity.ok().body(topologyRepository.findAll());
     }
 }

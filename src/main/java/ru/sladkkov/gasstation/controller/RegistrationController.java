@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.sladkkov.gasstation.service.RegistrationService;
 import ru.sladkkov.gasstation.dto.request.RegisterRequest;
+import ru.sladkkov.gasstation.service.RegistrationService;
+
 import javax.management.relation.RoleNotFoundException;
 
 @RestController
@@ -26,6 +27,7 @@ public class RegistrationController {
     public RegistrationController(RegistrationService registrationService) {
         this.registrationService = registrationService;
     }
+
 
     @Operation(
             summary = "Регистрация.",
