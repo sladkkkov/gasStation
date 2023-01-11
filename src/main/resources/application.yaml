@@ -13,7 +13,7 @@ spring:
     generate-ddl: true
     properties:
       hibernate:
-        ddl-auto: create
+        ddl-auto: update
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
 jwt:

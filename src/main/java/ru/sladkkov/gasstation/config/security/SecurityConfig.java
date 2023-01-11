@@ -66,13 +66,17 @@ public class SecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
+                .csrf().disable()
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("**").permitAll()
+                .antMatchers("api/v1/login").permitAll()
+                .antMatchers("api/v1/register").permitAll()
+                .antMatchers("api/v1/admin/**").hasRole("ADMIN")
+                .antMatchers("api/v1/user/**").hasRole("USER")
+                .antMatchers("api/v1/**").permitAll()
                 .and()
                 .apply(configurerFilter);
-
         return http.build();
     }
 

@@ -5,13 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Preconditions;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.sladkkov.gasstation.exception.CountFuelTankIncorrect;
 import ru.sladkkov.gasstation.model.Topology;
 import ru.sladkkov.gasstation.repository.TopologyRepository;
+import ru.sladkkov.gasstation.service.TopologyService;
 import ru.sladkkov.gasstation.service.XmlParser;
 
 import java.io.IOException;
 import java.util.*;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class TopologyController {
 
     private final XmlParser xmlParser;
     private final TopologyRepository topologyRepository;
+    private final TopologyService topologyService;
     Map<String, List<String>> bufferResult;
 
 
@@ -389,4 +391,19 @@ public class TopologyController {
     public ResponseEntity<List<Topology>> getRoutes() {
         return ResponseEntity.ok().body(topologyRepository.findAll());
     }
+
+    @GetMapping("/check-fuel-count")
+    public ResponseEntity<String> checkFuelCount(@RequestParam long id, @RequestParam int countFuelTankInParams) throws IOException {
+        Topology topologyById = topologyService.findTopologyById(id);
+
+        int countFuelTankInXmlTopology = xmlParser.checkCountFuelTankInTopologyXml(topologyById.getXmlTopology());
+
+        if (countFuelTankInXmlTopology % countFuelTankInParams != 0) {
+            throw new CountFuelTankIncorrect("Количество баков в топологии = " + countFuelTankInXmlTopology +
+                    " , что не соответствует количество видов топлива в параметрах моделирования АЗС = " + countFuelTankInParams);
+        }
+
+        return ResponseEntity.ok("Проверка прошла успешно");
+    }
+
 }

@@ -1,7 +1,6 @@
 package ru.sladkkov.gasstation.service;
 
 import org.springframework.stereotype.Service;
-import ru.sladkkov.gasstation.topology.squareelementmap.impl.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,11 +34,26 @@ public class XmlParser {
         return hashMap;
     }
 
+    public int checkCountFuelTankInTopologyXml(String xmlTopology) throws IOException {
+        Matcher matcher = pattern.matcher(xmlTopology);
+
+        int countFuelTank = 0;
+
+        while (matcher.find()) {
+            if (matcher.group(2).equals("bak")) {
+                countFuelTank++;
+            }
+        }
+
+        return countFuelTank;
+    }
+
+
     public int[][] parseHashMapToMassiveObject(Map<Integer, Integer> hashMapWithObject, int length, int width) {
         int[][] topologyElements = new int[width][length];
 
         for (int j = 0; j < width; j++) {
-            for (int i = 0; i < length;i++) {
+            for (int i = 0; i < length; i++) {
 
 
                 topologyElements[j][i] = hashMapWithObject.get(j * length + i);
