@@ -92,6 +92,7 @@ public class TopologyController {
                 if (anInt == 3) {
                     trk++;
                     Preconditions.checkState(!(i == 0 || j == 0 || i == mainTopology.length - 1 || j == ints.length - 1), "ТРК должны быть расположены не на границах топологии.");
+                    Preconditions.checkState(!(j < startX || j > endX), "ТРК должны быть расположены между въездом и выездом.");
                     trkArrayX.add(j);
                     trkArrayY.add(i);
                 }
