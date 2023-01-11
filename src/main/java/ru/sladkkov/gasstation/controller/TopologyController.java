@@ -193,7 +193,7 @@ public class TopologyController {
         Preconditions.checkState(exit == 1, "Нет выезда для машин.");
         Preconditions.checkState((startY == 0), "Въезд находится не крайних клетках");//|| startX == (topology[0].length-1)
         Preconditions.checkState((endY == 0), "Выезд находится не крайних клетках");//|| endX == (topology[0].length-1)
-        Preconditions.checkState(trk < 7 && trk > 0, "Нет ТРК для машин.");
+        Preconditions.checkState(trk < 5 && trk > 0, "Нет ТРК для машин.");
         Preconditions.checkState(cashBox == 1, "Нет кассы для оплаты бензина.");
         String race = "";
         List<String> raceList = new ArrayList<>();
@@ -346,7 +346,7 @@ public class TopologyController {
 
 
         }
-        Preconditions.checkState(baks < 7 && baks > 0, "Колличество баков должно быть от 0 до 7");
+        Preconditions.checkState(baks < 8 && baks > 0, "Колличество баков должно быть от 0 до 7");
         String race;
         List<String> raceList = new ArrayList<>();
         for (int k = 0; k < bakArrayX.size(); k++) {
